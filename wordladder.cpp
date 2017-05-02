@@ -13,7 +13,7 @@
 
 using namespace std;
 Set<string> ImportDict(ifstream &in, Set<string> &Words);
-stack<string> BFS(Set<string> &Words, string &a, string &b);
+Stack<string> BFS(Set<string> &Words, string &a, string &b);
 
 int main() {
 
@@ -36,8 +36,6 @@ int main() {
             cout << "Unable to open that file.  Try again." << endl;
         }
     }
-
-
 
     //Stuff the words into the Set
     Set<string> Words;
@@ -72,14 +70,11 @@ int main() {
 
         } else{
 
-            stack<string> A;
-            A = BFS(Words, a, b);
+            cout << BFS(Words, a, b).toString() << endl;
             cout << "ur ready to move on to the next step" << endl;
         }
 
     }
-
-
 
     cout << "Have a nice day." << endl;
     return 0;
@@ -103,30 +98,60 @@ Set<string> ImportDict(ifstream &in, Set<string> &Words){
 
 }
 
-stack<string> BFS(Set<string> &Words, string &a, string &b){
+Stack<string> BFS(Set<string> &Words, string &a, string &b){
 
-    Queue<stack<string> > Tube;
-    stack<string> w;
+    Queue<Stack<string> > Tube;
+    Stack<string> w;
     w.push(a);
     Tube.enqueue(w);
 
     while (!Tube.isEmpty()){
 
-        stack<string> ss = Tube.dequeue();
-        string s = ss.pop();
-
+        Stack<string> ss = Tube.dequeue();
+        string s = ss.peek();
 
         for (int i = 0; i < s.length(); i++){
+            s = ss.peek();
+            int count = 0;
 
             for (char j = 97; j <= 122; j++){
+                Stack<string> copy = ss;
+                char k = j;
+                s[i] = k;
 
+
+                if (Words.contains(s)){             //&& word hasn't been used in other ladders?
+                    if (s == b) {
+
+                        copy.push(s);
+                        cout << "Hooray!" << endl;
+                        return copy;
+                        break;
+
+                    } else {
+
+                        copy.push(s);
+                        Tube.enqueue(copy);
+                    }
+
+                }
+
+
+                count ++;
+
+                if (count == 26){
+
+                    string original = ss.peek();
+                    s[i] = original[i];
+
+                }
 
             }
 
         }
 
     }
-    return BFS;
-
+    Stack<string> empty;
+    return empty;
 }
 
