@@ -13,7 +13,7 @@
 
 using namespace std;
 Set<string> ImportDict(ifstream &in, Set<string> &Words);
-
+stack<string> BFS(Set<string> &Words, string &a, string &b);
 
 int main() {
 
@@ -72,6 +72,8 @@ int main() {
 
         } else{
 
+            stack<string> A;
+            A = BFS(Words, a, b);
             cout << "ur ready to move on to the next step" << endl;
         }
 
@@ -98,6 +100,33 @@ Set<string> ImportDict(ifstream &in, Set<string> &Words){
 
     }
     return Words;
+
+}
+
+stack<string> BFS(Set<string> &Words, string &a, string &b){
+
+    Queue<stack<string> > Tube;
+    stack<string> w;
+    w.push(a);
+    Tube.enqueue(w);
+
+    while (!Tube.isEmpty()){
+
+        stack<string> ss = Tube.dequeue();
+        string s = ss.pop();
+
+
+        for (int i = 0; i < s.length(); i++){
+
+            for (char j = 97; j <= 122; j++){
+
+
+            }
+
+        }
+
+    }
+    return BFS;
 
 }
 
