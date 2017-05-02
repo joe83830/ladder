@@ -12,11 +12,17 @@
 #include "simpio.h"
 
 using namespace std;
-Set<string> ImportDic(ifstream &in, Set<string> &Words);
+Set<string> ImportDict(ifstream &in, Set<string> &Words);
+
 
 int main() {
 
+    //Intro
+    cout << "Welcome to CS 106B Word Ladder." << endl
+         << "Please give me two English words, and I will change the" << endl
+         << "first into the second by changing one letter at a time." << endl;
 
+    //Open dict file
     ifstream in;
 
     while (true){
@@ -33,11 +39,43 @@ int main() {
 
 
 
-    //Stuff the words in the dic in the Set
+    //Stuff the words into the Set
     Set<string> Words;
-    Words = ImportDic(in, Words);
+    Words = ImportDict(in, Words);
     cout << Words.size() << endl;
     in.close();
+
+    //Prompt user for words
+
+    string a, b;
+
+    while (true){
+
+        a = getLine("Word #1 (or Enter to quit):");
+        if (a.empty()){
+
+            break;
+        }
+
+        b = getLine("Word #2 (or Enter to quit):");
+        if (b.empty()){
+
+            break;
+        }
+
+        if (!Words.contains(a) || !Words.contains(b)){
+
+            cout << "Invalid word, please enter words again. " << endl;
+        } else if (a.length() != b.length()){
+
+            cout << "Two Words have different length, please re-enter. " << endl;
+
+        } else{
+
+            cout << "ur ready to move on to the next step" << endl;
+        }
+
+    }
 
 
 
@@ -45,15 +83,15 @@ int main() {
     return 0;
 }
 
-Set<string> ImportDic(ifstream &in, Set<string> &Words){
+Set<string> ImportDict(ifstream &in, Set<string> &Words){
 
-    while(true){
+    while (true){
 
         string line;
         getline(in, line);
         Words.add(line);
 
-        if(in.fail()){
+        if (in.fail()){
 
             break;
         }
@@ -62,3 +100,4 @@ Set<string> ImportDic(ifstream &in, Set<string> &Words){
     return Words;
 
 }
+
