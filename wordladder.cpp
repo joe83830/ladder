@@ -27,7 +27,7 @@ int main() {
 
     while (true){
 
-        in.open(getLine("Dictionary file name? "));
+        in.open(trim(toLowerCase(getLine("Dictionary file name? "))));
 
         if (in.is_open()){
             break;
@@ -40,7 +40,7 @@ int main() {
     //Stuff the words into the Set
     Set<string> Words;
     Words = ImportDict(in, Words);
-    cout << Words.size() << endl;
+    //cout << Words.contains("caa") << endl;
     in.close();
 
     //Prompt user for words
@@ -49,13 +49,14 @@ int main() {
 
     while (true){
 
-        a = getLine("Word #1 (or Enter to quit):");
+        cout << endl;
+        a = trim(toLowerCase(getLine("Word #1 (or Enter to quit):")));
         if (a.empty()){
 
             break;
         }
 
-        b = getLine("Word #2 (or Enter to quit):");
+        b = trim(toLowerCase(getLine("Word #2 (or Enter to quit):")));
         if (b.empty()){
 
             break;
@@ -63,15 +64,26 @@ int main() {
 
         if (!Words.contains(a) || !Words.contains(b)){
 
-            cout << "Invalid word, please enter words again. " << endl;
+            cout << "The two words must be found in the dictionary." << endl;
+
+
         } else if (a.length() != b.length()){
 
-            cout << "Two Words have different length, please re-enter. " << endl;
+            cout << "The two words must be the same length." << endl;
+
 
         } else{
 
-            cout << BFS(Words, a, b).toString() << endl;
-            cout << "ur ready to move on to the next step" << endl;
+            Stack<string> FinalStack = BFS(Words, a, b);
+            cout << "A ladder from " << b << " back to " << a << ": " << endl;
+            int tempSize = FinalStack.size();
+            for (int size = 0; size < tempSize; size ++){
+
+                cout << FinalStack.peek() << " ";
+                FinalStack.pop();
+            }
+
+            cout << endl;
         }
 
     }
@@ -100,49 +112,51 @@ Set<string> ImportDict(ifstream &in, Set<string> &Words){
 
 Stack<string> BFS(Set<string> &Words, string &a, string &b){
 
+    //Create an empty queue of stacks.
     Queue<Stack<string> > Tube;
+
+    //Create/add a stack containing {w1} to the queue.
     Stack<string> w;
     w.push(a);
     Tube.enqueue(w);
-
+    Set<string> Used;
+    //While the queue is not empty:
     while (!Tube.isEmpty()){
+
+        //Dequeue the partial-ladder stack from the front of the queue.
 
         Stack<string> ss = Tube.dequeue();
         string s = ss.peek();
 
+        Used.add(s);
+
         for (int i = 0; i < s.length(); i++){
+
             s = ss.peek();
-            int count = 0;
 
             for (char j = 97; j <= 122; j++){
-                Stack<string> copy = ss;
-                char k = j;
-                s[i] = k;
 
+                s[i] = j;
 
-                if (Words.contains(s)){             //&& word hasn't been used in other ladders?
+                if (Words.contains(s) && !Used.contains(s) ){
                     if (s == b) {
 
+                        Stack<string> copy = ss;
                         copy.push(s);
-                        cout << "Hooray!" << endl;
+
                         return copy;
                         break;
 
                     } else {
 
+                        Stack<string> copy = ss;
                         copy.push(s);
+
                         Tube.enqueue(copy);
+
+                        Used.add(s);
+
                     }
-
-                }
-
-
-                count ++;
-
-                if (count == 26){
-
-                    string original = ss.peek();
-                    s[i] = original[i];
 
                 }
 
@@ -152,6 +166,7 @@ Stack<string> BFS(Set<string> &Words, string &a, string &b){
 
     }
     Stack<string> empty;
+    empty.push("The two words must be different.");
     return empty;
-}
 
+}
